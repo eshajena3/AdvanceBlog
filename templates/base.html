@@ -12,7 +12,49 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="/">AdvancedBlog</a>
+
+        <a class="navbar-brand" href="{% url 'home' %}">
+            AdvancedBlog
+        </a>
+
+        <div>
+
+            {% if user.is_authenticated %}
+
+                <a
+                    class="btn btn-outline-light"
+                    href="{% url 'profile' %}"
+                >
+                    Profile
+                </a>
+
+                <a
+                    class="btn btn-danger"
+                    href="{% url 'logout' %}"
+                >
+                    Logout
+                </a>
+
+            {% else %}
+
+                <a
+                    class="btn btn-success"
+                    href="{% url 'login' %}"
+                >
+                    Login
+                </a>
+
+                <a
+                    class="btn btn-warning"
+                    href="{% url 'register' %}"
+                >
+                    Register
+                </a>
+
+            {% endif %}
+
+        </div>
+
     </div>
 </nav>
 
