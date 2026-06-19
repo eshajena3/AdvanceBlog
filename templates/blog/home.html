@@ -9,7 +9,7 @@ Blogs
 <div class="container mt-5">
 
     <h1 class="mb-4">Latest Posts</h1>
-    
+
     {% if query %}
     <p>
         Showing results for:
@@ -36,7 +36,10 @@ Blogs
             </p>
 
             <span class="badge bg-primary">
-                {{ post.category }}
+                <a href="{% url 'category-posts' post.category.slug %}"
+                    class="badge bg-primary text-decoration-none">
+                    {{ post.category.name }}
+                </a>
             </span>
 
             <p class="mt-3">

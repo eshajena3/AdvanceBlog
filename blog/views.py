@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from .models import Post
+from .models import Post, Category
 
 
 def home(request):
@@ -24,6 +25,20 @@ def home(request):
 
     return render(request, "blog/home.html", context)
 
+def category_posts(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+
+    posts = Post.objects.filter(
+        category=category,
+        status="Published"
+    ).order_by("-created_at")
+
+    context = {
+        "category": category,
+        "posts": posts,
+    }
+
+    return render(request, "blog/category_posts.html", context)
 
 def post_detail(request, slug):
     post = get_object_or_404(
