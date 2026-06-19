@@ -45,6 +45,51 @@
 
     {% endfor %}
 
+    <hr>
+
+<h3 class="mt-5">Related Posts</h3>
+
+<div class="row">
+
+{% for related in related_posts %}
+
+<div class="col-md-4">
+
+    <div class="card mb-3">
+
+        {% if related.featured_image %}
+        <img src="{{ related.featured_image.url }}"
+             class="card-img-top"
+             style="height:180px; object-fit:cover;">
+        {% endif %}
+
+        <div class="card-body">
+
+            <h5>{{ related.title }}</h5>
+
+            <p>
+                {{ related.content|striptags|truncatewords:12 }}
+            </p>
+
+            <a href="{% url 'post-detail' related.slug %}"
+               class="btn btn-primary btn-sm">
+                Read More
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<p>No related posts available.</p>
+
+{% endfor %}
+
+</div>
+
 </div>
 
 {% endblock %}

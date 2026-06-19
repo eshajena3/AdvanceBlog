@@ -9,14 +9,24 @@ def home(request):
 
 
 def post_detail(request, slug):
+
     post = get_object_or_404(
         Post,
         slug=slug,
         status="Published"
     )
 
-    return render(
-        request,
-        "blog/post_detail.html",
-        {"post": post}
+    related_posts = (
+        Post.objects.filter(
+            category=post.category,
+            status="Published"
+        )
+        .exclude(id=post.id)[:3]
     )
+
+    context = {
+        "post": post,
+        "related_posts": related_posts,
+    }
+
+    return render(request, "blog/post_detail.html", context)
