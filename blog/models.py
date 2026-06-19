@@ -52,10 +52,11 @@ class Post(models.Model):
     content = RichTextField()
 
     tags = TaggableManager()
+
     likes = models.ManyToManyField(
-    User,
-    related_name="blog_posts",
-    blank=True
+        User,
+        related_name="blog_posts",
+        blank=True
     )
 
     status = models.CharField(
@@ -68,14 +69,37 @@ class Post(models.Model):
 
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        ordering = ["-created_at"]
-
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
-
         super().save(*args, **kwargs)
+
+    def total_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name="comments"
+    )
+
+    name = models.CharField(max_length=100)
+
+    email = models.EmailField()
+
+    body = models.TextField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"Comment by {self.name}"

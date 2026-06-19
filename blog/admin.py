@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Post
+from .models import Category, Post, Comment
 
 
 @admin.register(Category)
@@ -34,3 +34,31 @@ class PostAdmin(admin.ModelAdmin):
     }
 
     list_per_page = 10
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = (
+        "post",
+        "name",
+        "email",
+        "created_at",
+        "active",
+    )
+
+    list_filter = (
+        "active",
+        "created_at",
+    )
+
+    search_fields = (
+        "name",
+        "email",
+        "body",
+    )
+
+    list_editable = (
+        "active",
+    )
+
+    list_per_page = 20
