@@ -1,15 +1,31 @@
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from .models import Post
 
 
 def home(request):
-    posts = Post.objects.filter(status="Published").order_by("-created_at")
+    query = request.GET.get("q")
 
-    return render(request, "blog/home.html", {"posts": posts})
+    posts = Post.objects.filter(status="Published")
+
+    if query:
+        posts = posts.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(category__name__icontains=query)
+        )
+
+    posts = posts.order_by("-created_at")
+
+    context = {
+        "posts": posts,
+        "query": query,
+    }
+
+    return render(request, "blog/home.html", context)
 
 
 def post_detail(request, slug):
-
     post = get_object_or_404(
         Post,
         slug=slug,

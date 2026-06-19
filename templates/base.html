@@ -16,7 +16,20 @@
         <a class="navbar-brand" href="{% url 'home' %}">
             AdvancedBlog
         </a>
+        
+        <form class="d-flex me-3" method="GET" action="{% url 'blog-home' %}">
+            <input
+                class="form-control me-2"
+                type="search"
+                name="q"
+                placeholder="Search posts..."
+                value="{{ request.GET.q }}"
+            >
 
+            <button class="btn btn-outline-light">
+                Search
+            </button>
+        </form>
         <div>
 
             {% if user.is_authenticated %}

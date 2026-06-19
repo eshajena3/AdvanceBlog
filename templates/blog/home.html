@@ -9,6 +9,13 @@ Blogs
 <div class="container mt-5">
 
     <h1 class="mb-4">Latest Posts</h1>
+    
+    {% if query %}
+    <p>
+        Showing results for:
+        <strong>"{{ query }}"</strong>
+    </p>
+    {% endif %}
 
     {% for post in posts %}
 
