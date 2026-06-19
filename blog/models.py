@@ -52,6 +52,11 @@ class Post(models.Model):
     content = RichTextField()
 
     tags = TaggableManager()
+    likes = models.ManyToManyField(
+    User,
+    related_name="blog_posts",
+    blank=True
+    )
 
     status = models.CharField(
         max_length=10,

@@ -2,6 +2,8 @@ from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from taggit.models import Tag
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
 
 from .models import Category, Post
 
@@ -92,3 +94,14 @@ def tag_posts(request, slug):
             "posts": posts,
         },
     )
+@login_required
+def like_post(request, slug):
+
+    post = get_object_or_404(Post, slug=slug)
+
+    if request.user in post.likes.all():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+
+    return redirect("post-detail", slug=slug)

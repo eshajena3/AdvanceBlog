@@ -8,25 +8,20 @@
 
 <div class="container mt-5">
 
+    {% if post.featured_image %}
     <img src="{{ post.featured_image.url }}"
-         class="img-fluid rounded mb-4">
+         class="img-fluid rounded mb-4"
+         alt="{{ post.title }}">
+    {% endif %}
 
     <h1>{{ post.title }}</h1>
 
-    <p>
-
-        <strong>Author:</strong>
-        {{ post.author }}
-
+    <p class="text-muted">
+        <strong>Author:</strong> {{ post.author }}
         |
-
-        <strong>Category:</strong>
-        {{ post.category }}
-
+        <strong>Category:</strong> {{ post.category }}
         |
-
         {{ post.created_at|date:"F d, Y" }}
-
     </p>
 
     <hr>
@@ -35,60 +30,110 @@
 
     <hr>
 
+    <!-- Tags -->
+
     <h5>Tags</h5>
 
     {% for tag in post.tags.all %}
 
-        <span class="badge bg-secondary">
-            {{ tag }}
-        </span>
+        <a href="{% url 'tag-posts' tag.slug %}"
+           class="badge bg-secondary text-decoration-none">
+            {{ tag.name }}
+        </a>
+
+    {% empty %}
+
+        <span class="text-muted">No tags</span>
 
     {% endfor %}
 
     <hr>
 
-<h3 class="mt-5">Related Posts</h3>
+    <!-- Like Section -->
 
-<div class="row">
+    <h5>Likes</h5>
 
-{% for related in related_posts %}
+    <p>
+        ❤️ {{ post.likes.count }} Like{{ post.likes.count|pluralize }}
+    </p>
 
-<div class="col-md-4">
+    {% if user.is_authenticated %}
 
-    <div class="card mb-3">
+    <form method="POST"
+          action="{% url 'like-post' post.slug %}">
+        {% csrf_token %}
 
-        {% if related.featured_image %}
-        <img src="{{ related.featured_image.url }}"
-             class="card-img-top"
-             style="height:180px; object-fit:cover;">
+        {% if user in post.likes.all %}
+
+        <button type="submit" class="btn btn-danger">
+            ❤️ Unlike
+        </button>
+
+        {% else %}
+
+        <button type="submit" class="btn btn-primary">
+            🤍 Like
+        </button>
+
         {% endif %}
 
-        <div class="card-body">
+    </form>
 
-            <h5>{{ related.title }}</h5>
+    {% else %}
 
-            <p>
-                {{ related.content|striptags|truncatewords:12 }}
-            </p>
+    <a href="{% url 'login' %}" class="btn btn-outline-primary">
+        Login to Like
+    </a>
 
-            <a href="{% url 'post-detail' related.slug %}"
-               class="btn btn-primary btn-sm">
-                Read More
-            </a>
+    {% endif %}
+
+    <hr>
+
+    <!-- Related Posts -->
+
+    <h3 class="mt-5">Related Posts</h3>
+
+    <div class="row">
+
+        {% for related in related_posts %}
+
+        <div class="col-md-4">
+
+            <div class="card mb-4 h-100">
+
+                {% if related.featured_image %}
+                <img src="{{ related.featured_image.url }}"
+                     class="card-img-top"
+                     style="height:180px; object-fit:cover;"
+                     alt="{{ related.title }}">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h5>{{ related.title }}</h5>
+
+                    <p>
+                        {{ related.content|striptags|truncatewords:12 }}
+                    </p>
+
+                    <a href="{% url 'post-detail' related.slug %}"
+                       class="btn btn-primary btn-sm">
+                        Read More
+                    </a>
+
+                </div>
+
+            </div>
 
         </div>
 
+        {% empty %}
+
+        <p>No related posts available.</p>
+
+        {% endfor %}
+
     </div>
-
-</div>
-
-{% empty %}
-
-<p>No related posts available.</p>
-
-{% endfor %}
-
-</div>
 
 </div>
 
