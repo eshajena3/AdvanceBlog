@@ -1,6 +1,7 @@
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from taggit.models import Tag
+from django.core.paginator import Paginator
 
 from .models import Category, Post
 
@@ -12,22 +13,24 @@ def home(request):
 
     if query:
         posts = posts.filter(
-            Q(title__icontains=query)
-            | Q(content__icontains=query)
-            | Q(category__name__icontains=query)
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(category__name__icontains=query)
         )
 
     posts = posts.order_by("-created_at")
 
-    return render(
-        request,
-        "blog/home.html",
-        {
-            "posts": posts,
-            "query": query,
-        },
-    )
+    paginator = Paginator(posts, 3)      # 3 posts per page
 
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "page_obj": page_obj,
+        "query": query,
+    }
+
+    return render(request, "blog/home.html", context)
 
 def category_posts(request, slug):
     category = get_object_or_404(Category, slug=slug)
