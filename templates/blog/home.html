@@ -1,11 +1,57 @@
 {% extends "base.html" %}
 
 {% block title %}
-Home
+Blogs
 {% endblock %}
 
 {% block content %}
 
-<h1>Welcome to Advanced Blog</h1>
+<div class="container mt-5">
+
+    <h1 class="mb-4">Latest Posts</h1>
+
+    {% for post in posts %}
+
+    <div class="card mb-4">
+
+        <img src="{{ post.featured_image.url }}"
+             class="card-img-top"
+             style="height:300px;object-fit:cover;">
+
+        <div class="card-body">
+
+            <h3>{{ post.title }}</h3>
+
+            <p>
+                By <b>{{ post.author }}</b>
+                |
+                {{ post.created_at|date:"M d, Y" }}
+            </p>
+
+            <span class="badge bg-primary">
+                {{ post.category }}
+            </span>
+
+            <p class="mt-3">
+                {{ post.content|safe|truncatewords:30 }}
+            </p>
+
+           <a href="{% url 'post-detail' post.slug %}" class="btn btn-dark">
+                Read More
+           </a>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="alert alert-warning">
+        No posts available.
+    </div>
+
+    {% endfor %}
+
+</div>
 
 {% endblock %}
