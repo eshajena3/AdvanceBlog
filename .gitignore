@@ -10,7 +10,8 @@ venv/
 .env
 
 # Media uploads
-media/
+media/profile_pics/
+!media/default.png
 
 # VS Code
 .vscode/

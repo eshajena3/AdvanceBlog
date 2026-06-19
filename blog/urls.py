@@ -14,5 +14,6 @@ urlpatterns = [
         views.post_detail,
         name="post-detail",
     ),
+    path("tag/<slug:slug>/", views.tag_posts, name="tag_posts"),
    
 ]
