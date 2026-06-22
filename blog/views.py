@@ -1,10 +1,8 @@
+from django.shortcuts import render, get_object_or_404,redirect
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
 from taggit.models import Tag
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
-
 from .models import Category, Post
 from .forms import CommentForm
 
@@ -27,10 +25,11 @@ def home(request):
 
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-
+    recent_posts = Post.objects.filter(status="Published").order_by("-created_at")[:5]
     context = {
         "page_obj": page_obj,
         "query": query,
+        "recent_posts": recent_posts,
     }
 
     return render(request, "blog/home.html", context)
@@ -87,12 +86,16 @@ def post_detail(request, slug):
         .exclude(pk=post.pk)
         .order_by("-created_at")[:3]
     )
+    recent_posts = Post.objects.filter(
+        status="Published"
+    ).exclude(pk=post.pk).order_by("-created_at")[:5]
 
     context = {
         "post": post,
         "comments": comments,
         "form": form,
         "related_posts": related_posts,
+        "recent_posts": recent_posts,
     }
 
     return render(request, "blog/post_detail.html", context)
@@ -125,3 +128,20 @@ def like_post(request, slug):
         post.likes.add(request.user)
 
     return redirect("post-detail", slug=slug)
+
+@login_required
+def dashboard(request):
+
+    posts = Post.objects.filter(
+        author=request.user
+    ).order_by("-created_at")
+
+    context = {
+        "posts": posts,
+    }
+
+    return render(
+        request,
+        "blog/dashboard.html",
+        context,
+    )

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">
+        My Dashboard
+    </h2>
+
+    <p class="text-muted">
+        Welcome, <strong>{{ user.username }}</strong>
+    </p>
+
+    <hr>
+
+    {% if posts %}
+
+        {% for post in posts %}
+
+        <div class="card mb-3">
+
+            <div class="card-body">
+
+                <h4>{{ post.title }}</h4>
+
+                <p>
+
+                    <strong>Status:</strong>
+
+                    {% if post.status == "Published" %}
+
+                        <span class="badge bg-success">
+                            Published
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-warning text-dark">
+                            Draft
+                        </span>
+
+                    {% endif %}
+
+                </p>
+
+                <p class="text-muted">
+                    {{ post.created_at|date:"F d, Y" }}
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="alert alert-info">
+            You haven't created any posts yet.
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
