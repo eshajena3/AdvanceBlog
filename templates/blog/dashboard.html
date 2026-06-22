@@ -8,13 +8,19 @@ Dashboard
 
 <div class="container mt-5">
 
+    <!-- Dashboard Header -->
+
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
+
             <h2>My Dashboard</h2>
+
             <p class="text-muted mb-0">
-                Welcome, <strong>{{ user.username }}</strong>
+                Welcome,
+                <strong>{{ user.username }}</strong>
             </p>
+
         </div>
 
         <a href="{% url 'create-post' %}" class="btn btn-success">
@@ -23,19 +29,91 @@ Dashboard
 
     </div>
 
+    <!-- Dashboard Statistics -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card text-center text-bg-primary shadow">
+
+                <div class="card-body">
+
+                    <h2>{{ total_posts }}</h2>
+
+                    <p class="mb-0">Total Posts</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card text-center text-bg-success shadow">
+
+                <div class="card-body">
+
+                    <h2>{{ published_posts }}</h2>
+
+                    <p class="mb-0">Published</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card text-center text-bg-warning shadow">
+
+                <div class="card-body">
+
+                    <h2>{{ draft_posts }}</h2>
+
+                    <p class="mb-0">Drafts</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 mb-3">
+
+            <div class="card text-center text-bg-danger shadow">
+
+                <div class="card-body">
+
+                    <h2>{{ total_likes }}</h2>
+
+                    <p class="mb-0">Total Likes ❤️</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
     <hr>
+
+    <!-- User Posts -->
 
     {% if posts %}
 
         {% for post in posts %}
 
-        <div class="card mb-3 shadow-sm">
+        <div class="card mb-4 shadow-sm">
 
             <div class="card-body">
 
-                <div class="d-flex justify-content-between">
+                <div class="row align-items-center">
 
-                    <div>
+                    <div class="col-md-9">
 
                         <h4>{{ post.title }}</h4>
 
@@ -60,29 +138,31 @@ Dashboard
                         </p>
 
                         <small class="text-muted">
-                            {{ post.created_at|date:"F d, Y" }}
+                            Created on {{ post.created_at|date:"F d, Y" }}
                         </small>
+
+                        <br><br>
+
+                        <span class="badge bg-danger">
+                            ❤️ {{ post.total_likes }} Likes
+                        </span>
 
                     </div>
 
-                    <div>
+                    <div class="col-md-3 text-md-end mt-3 mt-md-0">
 
                         <a href="{% url 'post-detail' post.slug %}"
-                           class="btn btn-primary btn-sm mb-2">
+                           class="btn btn-primary btn-sm mb-2 w-100">
                             View
                         </a>
 
-                        <br>
-
                         <a href="{% url 'edit-post' post.slug %}"
-                           class="btn btn-warning btn-sm mb-2">
+                           class="btn btn-warning btn-sm mb-2 w-100">
                             Edit
                         </a>
 
-                        <br>
-
                         <a href="{% url 'delete-post' post.slug %}"
-                           class="btn btn-danger btn-sm">
+                           class="btn btn-danger btn-sm w-100">
                             Delete
                         </a>
 
@@ -98,12 +178,13 @@ Dashboard
 
     {% else %}
 
-        <div class="alert alert-info">
+        <div class="alert alert-info text-center">
 
-            <h5>No posts yet!</h5>
+            <h4>No Posts Yet!</h4>
 
             <p>
-                Click the <strong>Create New Post</strong> button to publish your first article.
+                Start writing your first blog by clicking the
+                <strong>Create New Post</strong> button.
             </p>
 
         </div>

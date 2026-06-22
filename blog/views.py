@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic.edit import UpdateView
 from taggit.models import Tag
+from django.contrib import messages
 
 from .models import Category, Post
 from .forms import CommentForm, PostForm
@@ -171,12 +172,33 @@ def dashboard(request):
         author=request.user
     ).order_by("-created_at")
 
+    total_posts = posts.count()
+
+    published_posts = posts.filter(
+        status="Published"
+    ).count()
+
+    draft_posts = posts.filter(
+        status="Draft"
+    ).count()
+
+    total_likes = 0
+
+    for post in posts:
+        total_likes += post.likes.count()
+
+    context = {
+        "posts": posts,
+        "total_posts": total_posts,
+        "published_posts": published_posts,
+        "draft_posts": draft_posts,
+        "total_likes": total_likes,
+    }
+
     return render(
         request,
         "blog/dashboard.html",
-        {
-            "posts": posts,
-        },
+        context,
     )
 
 
