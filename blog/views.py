@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
 from .models import Category, Post
+from .forms import CommentForm
 
 
 def home(request):
@@ -53,29 +54,48 @@ def category_posts(request, slug):
 
 
 def post_detail(request, slug):
+
     post = get_object_or_404(
         Post,
         slug=slug,
-        status="Published",
+        status="Published"
     )
+
+    comments = post.comments.filter(active=True)
+
+    if request.method == "POST":
+
+        form = CommentForm(request.POST)
+
+        if form.is_valid():
+
+            new_comment = form.save(commit=False)
+            new_comment.post = post
+            new_comment.save()
+
+            return redirect("post-detail", slug=post.slug)
+
+    else:
+
+        form = CommentForm()
 
     related_posts = (
         Post.objects.filter(
             category=post.category,
-            status="Published",
+            status="Published"
         )
-        .exclude(id=post.id)
+        .exclude(pk=post.pk)
         .order_by("-created_at")[:3]
     )
 
-    return render(
-        request,
-        "blog/post_detail.html",
-        {
-            "post": post,
-            "related_posts": related_posts,
-        },
-    )
+    context = {
+        "post": post,
+        "comments": comments,
+        "form": form,
+        "related_posts": related_posts,
+    }
+
+    return render(request, "blog/post_detail.html", context)
 
 
 def tag_posts(request, slug):

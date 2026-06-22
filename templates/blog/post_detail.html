@@ -135,6 +135,71 @@
 
     </div>
 
+    <hr class="mt-5">
+
+    <!-- Comments -->
+
+    <h3>Comments ({{ comments.count }})</h3>
+
+    {% for comment in comments %}
+
+    <div class="card mb-3">
+
+        <div class="card-body">
+
+            <h5>{{ comment.name }}</h5>
+
+            <small class="text-muted">
+                {{ comment.created_at|date:"F d, Y" }}
+            </small>
+
+            <p class="mt-2">
+                {{ comment.body }}
+            </p>
+
+        </div>
+
+    </div>
+
+    {% empty %}
+
+    <div class="alert alert-info">
+        No comments yet. Be the first to comment!
+    </div>
+
+    {% endfor %}
+
+    <hr>
+
+    <!-- Comment Form -->
+
+    <h3>Leave a Comment</h3>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.body.label_tag }}
+            {{ form.body }}
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Post Comment
+        </button>
+
+    </form>
+
 </div>
 
 {% endblock %}
