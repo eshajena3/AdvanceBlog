@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Post
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">
+        Create New Post
+    </h2>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button class="btn btn-success">
+            Publish
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}

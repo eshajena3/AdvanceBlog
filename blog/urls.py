@@ -12,6 +12,24 @@ urlpatterns = [
     ),
 
     path(
+        "create/",
+        views.create_post,
+        name="create-post",
+    ),
+
+    path(
+        "edit/<slug:slug>/",
+        views.PostUpdateView.as_view(),
+        name="edit-post",
+    ),
+
+    path(
+        "delete/<slug:slug>/",
+        views.delete_post,
+        name="delete-post",
+    ),
+
+    path(
         "category/<slug:slug>/",
         views.category_posts,
         name="category-posts",
